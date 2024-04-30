@@ -3,6 +3,21 @@ import sys
 from SudokuGame import SudokuGrid, Button
 import random
 
+# Initialize pygame
+pg.init()
+
+icon = pg.image.load('icon.png')  # Load your icon image
+pg.display.set_icon(icon)  # Set the icon for the window
+
+
+# Load calm music
+pg.mixer.music.load('calm.mp3')
+
+# Set volume (optional)
+pg.mixer.music.set_volume(0.5)  # Adjust volume between 0 and 1
+
+# Play the music on loop (-1 indicates loop indefinitely)
+pg.mixer.music.play(-1)
 
 
 # Pygame setup
@@ -13,6 +28,8 @@ screen = pg.display.set_mode((screen_width, screen_height))
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
+
+
 
 
 # Define cell_size
@@ -55,17 +72,18 @@ grids = [[
     [0, 4, 0, 0, 5, 0, 0, 3, 6],
     [7, 0, 3, 0, 1, 8, 0, 0, 0]],
     [
-    [0, 0, 0, 0, 0, 0, 0, 2, 6],
-    [0, 8, 0, 0, 0, 0, 0, 0, 7],
-    [0, 0, 7, 0, 0, 9, 0, 0, 0],
-    [2, 0, 0, 0, 1, 0, 0, 0, 0],
-    [0, 0, 1, 0, 0, 0, 0, 6, 0],
-    [0, 0, 0, 5, 0, 0, 0, 0, 0],
-    [9, 0, 0, 0, 0, 0, 3, 0, 0],
-    [0, 0, 0, 0, 7, 0, 0, 0, 0],
-    [0, 6, 0, 0, 0, 0, 0, 0, 3]],
+    [5, 0, 0, 0, 0, 7, 4, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 9, 0],
+    [0, 0, 0, 0, 9, 0, 0, 0, 7],
+    [0, 0, 0, 6, 0, 9, 0, 0, 0],
+    [0, 7, 0, 9, 8, 0, 6, 0, 0],
+    [9, 0, 3, 0, 0, 4, 0, 6, 0],
+    [8, 0, 7, 4, 0, 0, 0, 0, 0],
+    [6, 2, 5, 0, 1, 0, 0, 0, 4],
+    [4, 0, 0, 2, 0, 0, 3, 0, 0]],
+
     [
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 6, 0, 0, 0, 0, 0],
     [2, 0, 0, 0, 0, 0, 0, 0, 8],
     [0, 6, 0, 0, 0, 0, 0, 7, 0],
     [0, 0, 7, 0, 0, 0, 0, 0, 0],
@@ -73,7 +91,9 @@ grids = [[
     [0, 3, 0, 0, 0, 0, 1, 0, 0],
     [8, 0, 0, 0, 0, 0, 0, 6, 0],
     [0, 0, 0, 0, 0, 4, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 3]]
+    [0, 0, 0, 0, 0, 0, 0, 0, 3]
+]
+
 ]
 
 
@@ -110,25 +130,25 @@ solved_grid = [
     [2, 4, 8, 9, 5, 3, 6, 1, 3],
     [7, 6, 3, 4, 1, 8, 5, 2, 9]],
     [
-    [5, 1, 9, 8, 6, 7, 4, 2, 6],
-    [7, 8, 2, 1, 3, 4, 5, 9, 7],
-    [3, 9, 7, 6, 5, 9, 8, 1, 2],
-    [2, 3, 6, 4, 1, 5, 9, 8, 1],
-    [1, 7, 4, 9, 8, 2, 6, 3, 5],
-    [8, 5, 3, 5, 2, 6, 1, 4, 9],
-    [9, 2, 8, 3, 4, 1, 3, 7, 6],
-    [6, 4, 5, 7, 9, 8, 2, 5, 8],
-    [4, 6, 1, 2, 7, 3, 5, 9, 3]],
+    [5, 1, 9, 8, 6, 7, 4, 2, 3],
+    [7, 8, 2, 3, 4, 1, 5, 9, 6],
+    [3, 4, 6, 5, 9, 2, 8, 1, 7],
+    [2, 3, 8, 6, 5, 9, 7, 4, 1],
+    [1, 7, 4, 9, 8, 3, 6, 5, 2],
+    [9, 5, 3, 1, 2, 4, 7, 6, 8],
+    [8, 9, 7, 4, 3, 5, 2, 6, 1],
+    [6, 2, 5, 7, 1, 8, 9, 3, 4],
+    [4, 6, 1, 2, 7, 6, 3, 8, 5]],
     [
-    [4, 3, 5, 2, 6, 1, 7, 9, 8],
-    [2, 1, 6, 7, 8, 9, 5, 4, 3],
-    [7, 6, 8, 5, 3, 4, 9, 1, 2],
-    [5, 8, 7, 1, 2, 6, 4, 3, 9],
-    [1, 9, 4, 8, 5, 3, 6, 2, 7],
-    [3, 2, 9, 6, 7, 4, 8, 5, 1],
-    [8, 5, 1, 9, 4, 2, 3, 7, 6],
-    [6, 7, 3, 3, 9, 8, 2, 1, 4],
-    [9, 4, 2, 5, 1, 7, 6, 8, 3]]
+    [1, 8, 3, 6, 7, 5, 9, 4, 2],
+    [2, 4, 7, 9, 1, 3, 6, 5, 8],
+    [5, 6, 9, 4, 8, 2, 3, 7, 1],
+    [6, 1, 7, 8, 4, 9, 5, 2, 3],
+    [4, 9, 8, 3, 5, 7, 2, 1, 6],
+    [7, 3, 2, 5, 6, 1, 1, 8, 9],
+    [8, 2, 5, 1, 3, 9, 7, 6, 4],
+    [3, 7, 6, 2, 9, 4, 8, 3, 5],
+    [9, 5, 1, 7, 2, 8, 4, 9, 3]]
 ]
 
 # Sudoku grid setup
@@ -140,9 +160,9 @@ grid_index = random.randint(0, 4)  # Select a random grid index
 for row_index, row in enumerate(grids[grid_index]):
     for col_index, value in enumerate(row):
         if value != 0:
-            grid.set_value(row_index, col_index, value, RED)  # Set pre-made values in red
+            grid.set_value(row_index, col_index, value, BLACK)  # Set pre-made values in red
         else:
-            grid.set_value(row_index, col_index, '', BLACK)  # Set empty cells in black
+            grid.set_value(row_index, col_index, '', RED)  # Set empty cells in black
 
 # Main loop
 running = True
@@ -177,18 +197,18 @@ while running:
                 row, col = selected_cell
                 if event.key == pg.K_BACKSPACE:  # Handle backspace key
                     if grids[grid_index][row][col] == 0:  # Check if cell is empty
-                        grid.set_value(row, col, '', BLACK)  # Set value to empty
+                        grid.set_value(row, col, '', RED)  # Set value to empty
                 elif pg.K_1 <= event.key <= pg.K_9:  # Handle numeric keys
                     input_number = int(pg.key.name(event.key))
                     if grids[grid_index][row][col] == 0:  # Check if cell is empty
-                        grid.set_value(row, col, input_number, BLACK)  # Set input number
+                        grid.set_value(row, col, input_number, RED)  # Set input number
 
     # Fill screen with white
     screen.fill(WHITE)
 
     # Draw grid lines
     for i in range(10):
-        thickness = 5 if i % 3 == 0 else 1
+        thickness = 6 if i % 3 == 0 else 3
         pg.draw.line(screen, BLACK, (0, i * cell_size), (screen_width, i * cell_size), thickness)
         pg.draw.line(screen, BLACK, (i * cell_size, 0), (i * cell_size, screen_height - 92), thickness)
 
